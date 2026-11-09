@@ -14,6 +14,14 @@ pip install --user sinol-make        # >= 1.9.15
 python3 contest.py init --id <contest-id> --name "<Contest Name>"   # commit hook + name
 ```
 
+## Claude Code
+
+Opening the repository in Claude Code offers to install the
+[sinol-package](https://github.com/kubat1234/sinol-package-skill) skill. Manually:
+`/plugin marketplace add kubat1234/sinol-package-skill`, then
+`/plugin install sinol-package@sinol-package`.
+Update: `/plugin marketplace update sinol-package`.
+
 ## New package
 
 ```sh
