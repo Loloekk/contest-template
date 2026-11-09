@@ -63,7 +63,8 @@ __attribute__((weak)) int main() {
     a.assign(size_t(n) + 1, 0);
     reads.assign(size_t(n) + 1, 0);
     for (int i = 1; i <= n; ++i) a[size_t(i)] = liczba();
-    fclose(stdin);  // the contestant must use element(), not read the input
+    // No fclose(stdin): sio2jail on SIO forbids close(0), which gives RV on every test.
+    // The whole test is already read, so the contestant has nothing left to read.
     long long answer = maks_suma();
     printf("%s %lld\n", KOD_OK, answer);
     fflush(stdout);
