@@ -341,6 +341,7 @@ def lint_statement(r, tex, cfg, tid):
     m = re.search(r"\\id\{(\w+)\}", tex)
     if m and m.group(1) != tid:
         r.error(f"statement \\id{{{m.group(1)}}} differs from package id")
+    lint_date(r, tex)
     ram = re.search(r"\\RAM\{(\d+)\}", tex)
     if ram and "memory_limit" in cfg and int(ram.group(1)) != cfg["memory_limit"] // 1024:
         r.warn(f"statement \\RAM{{{ram.group(1)}}} MB but memory_limit is {cfg['memory_limit']} KiB "
@@ -362,6 +363,21 @@ def lint_statement(r, tex, cfg, tid):
         real = limits.get(int(g), cfg.get("time_limit", 0)) / 1000
         if abs(stated - real) > 1e-9:
             r.error(f"statement says {stated:g} s for group {g}, config.yml has {real:g} s")
+
+
+def lint_date(r, tex):
+    """\\date{YYYY-MM-DD}: ISO format and a real date; TODO is reported elsewhere."""
+    import datetime
+    m = re.search(r"\\date\{([^}]*)\}", tex)
+    if not m or m.group(1).strip() == "TODO":
+        return
+    v = m.group(1).strip()
+    try:
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", v):
+            raise ValueError
+        datetime.date.fromisoformat(v)
+    except ValueError:
+        r.error(f"statement \\date{{{v}}} is not an ISO date (YYYY-MM-DD, e.g. 2026-11-09)")
 
 
 def has_cycle(deps):
